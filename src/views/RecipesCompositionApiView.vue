@@ -11,5 +11,7 @@ import RecipesCompositionApiList from '@/components/RecipesCompositionApiList.vu
 </template>
 
 <style scoped>
+title{
 
+}
 </style>

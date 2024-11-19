@@ -23,6 +23,7 @@ header {
   max-height: 100vh;
 }
 
+
 nav a {
   display: inline-block;
   padding: 0 1rem;
