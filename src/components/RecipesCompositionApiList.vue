@@ -6,51 +6,44 @@ const recipes = ref([
   {
     id: 1,
     name: "Korean Fried Chicken",
-    description: "Crispy and flavorful chicken with a spicy glaze.",
-    instructions: "",
-    image: "https://i.pinimg.com/736x/7f/4e/54/7f4e542859a08ac78396d4d63ccd7a10.jpg/300x200",
-    category: "Appetizers",
-    author: "Noobanh",
+    image: "https://i.pinimg.com/736x/7f/4e/54/7f4e542859a08ac78396d4d63ccd7a10.jpg",
   },
   {
     id: 2,
     name: "Spaghetti Carbonara",
-    description: "Classic Italian pasta with creamy sauce.",
-    instructions: "",
-    image: "https://i.pinimg.com/736x/fe/07/27/fe072747470c09eeadfcac3f450a130e.jpg/300x200",
-    category: "Main Course",
-    author: "Chef Luigi",
+    image: "https://i.pinimg.com/736x/fe/07/27/fe072747470c09eeadfcac3f450a130e.jpg",
   },
   {
     id: 3,
     name: "Matcha Latte",
-    description: "Refreshing green tea latte with a creamy texture.",
-    instructions: "",
-    image: "https://i.pinimg.com/736x/2d/37/32/2d3732b6026cd03893833607968e6c84.jpg/300x200",
-    category: "Drinks",
-    author: "Tea Lover",
+    image: "https://i.pinimg.com/736x/3d/f0/38/3df0387ca10b830837f1bf2f80559762.jpg",
+  },
+  {
+    id: 4,
+    name: "Tiramisu",
+    image: "https://i.pinimg.com/736x/eb/67/cd/eb67cdd4329512df261dcde1dce229f9.jpg",
   },
 ]);
-const inputData = ref({ name: '', description: '', ingredients: '' });
-</script>
+function goToRecipeDetail(recipeId: number) {
+  router.push(`/recipes/${recipeId}`);
+}
 
+</script>
 
 <template>
 <div class="recipe-list">
   <h1 class="title">{{title}}</h1>
   <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
-  <div v-else>
-    <ul class="recipe-items">
-      <li v-for="recipe in recipes" :key="recipe.id" class="recipe-card">
-        <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
-        <h2>{{ recipe.name }}</h2>
-        <p>{{ recipe.description }}</p>
-        <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-      </li>
-    </ul>
+  <div class="recipes-container">
+    <div
+      v-for="recipe in recipes"
+         :key="recipe.id"
+         class="recipe-card"
+         @click="goToRecipeDetail(recipe.id)">
+      <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
+      <h2 class="recipe-name">{{ recipe.name }}</h2>
+    </div>
   </div>
-
-
 </div>
 </template>
 
@@ -63,7 +56,7 @@ const inputData = ref({ name: '', description: '', ingredients: '' });
   margin: 20px 0;
   font-size: 2.5rem;
 }
-.recipe-items {
+.recipes-container{
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -71,18 +64,26 @@ const inputData = ref({ name: '', description: '', ingredients: '' });
 }
 .recipe-card {
   width: 300px;
-  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+.recipe-card:hover {
+  transform: scale(1.05);
 }
 .recipe-image {
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
+.recipe-name {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
 .warning {
   color: red;
 }
-
 </style>
