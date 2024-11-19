@@ -4,9 +4,9 @@ import RecipesCompositionApiList from '@/components/RecipesCompositionApiList.vu
 </script>
 
 <template>
-  <main>
-    <RecipesCompositionApiList title="Our Recipes" />
-  </main>
+
+    <RecipesCompositionApiList title="Lülis Recipes" />
+
 
 </template>
 

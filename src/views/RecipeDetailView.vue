@@ -5,6 +5,9 @@ import RecipeDetail from '@/components/RecipeDetail.vue';
 </script>
 
 <template>
+  <RecipeDetail>
+
+  </RecipeDetail>
 
 </template>
 

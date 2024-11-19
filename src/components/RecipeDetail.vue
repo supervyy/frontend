@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+defineProps<{ name: string }>()
+
 const recipes = ref([
   {
     id: 1,
@@ -31,15 +33,32 @@ const recipes = ref([
     name: "Tiramisu",
     image: "https://i.pinimg.com/736x/eb/67/cd/eb67cdd4329512df261dcde1dce229f9.jpg",
   },
-]);
 
+]);
+onMounted(() => {
+  const recipeId = parseInt(route.params.id as string, 10);
+  recipe.value = recipes.find((r) => r.id === recipeId) || null;
+});
 
 </script>
 
 <template>
+  <div class="recipe-detail">
+    <div v-if="recipe" class="detail-container">
+      <h1 class="recipe-title">{{ recipe.name }}</h1>
+      <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
+      <p class="recipe-description">{{ recipe.description }}</p>
+    </div>
+    <div v-else class="error-page">
+      <h2>Recipe not found</h2>
+    </div>
+  </div>
 
 </template>
 
 <style scoped>
+.error-page {
+  color: red;
+}
 
 </style>
