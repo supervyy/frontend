@@ -5,25 +5,18 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <div>
-
-    </div>
     <div class="nav-links">
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="recipes-composition-api">Recipes</RouterLink>
         <RouterLink to="category">Category</RouterLink>
         <img src="https://i.pinimg.com/736x/9a/ba/3f/9aba3fd90771ca191007054b3414904d.jpg ">
-
       </nav>
     </div>
   </header>
   <main>
-
+    <RouterView />
   </main>
-
-
-  <RouterView />
 </template>
 
 <style scoped>
@@ -47,7 +40,7 @@ header img{
 nav a {
   display: inline-block;
   padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  font-weight: 500;
 }
 
 @media (min-width: 1024px) {
@@ -57,6 +50,5 @@ nav a {
     place-items: center;
     padding-right: 20px;
   }
-
 }
 </style>

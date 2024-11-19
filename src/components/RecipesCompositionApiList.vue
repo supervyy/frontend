@@ -49,7 +49,8 @@ function goToRecipeDetail(recipeId: number) {
 
 <style scoped>
 .recipe-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   text-align: center;
   font-family: 'Arial', sans-serif;
   margin-top: 3rem;
@@ -59,11 +60,11 @@ function goToRecipeDetail(recipeId: number) {
   font-size: 1.8rem;
   font-weight: 600;
   text-align: center;
-  margin: 5rem 0 2rem 0;
+  margin: 5rem 0 0 0;
 
 }
 .recipes-container{
-  display: grid;
+  display: flex;
   margin-top: 2rem;
   gap: 20px;
 }
@@ -89,12 +90,6 @@ function goToRecipeDetail(recipeId: number) {
     height: 200px;
     object-fit: cover;
   }
-}
-@media screen and (min-width: 992px) {
-  .recipe-container {
-    grid-template-columns: 1fr 1fr;
-  }
-
 }
 
 .recipe-name {
