@@ -1,41 +1,43 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 
 defineProps<{ title: string }>()
 
 interface Recipe {
   id: number
   name: string
-  image: string
+  recipeImage: string
 }
-const recipes = ref<Recipe[]>([
-  {
-    id: 1,
-    name: 'Korean Fried Chicken',
-    image: 'https://i.pinimg.com/736x/7f/4e/54/7f4e542859a08ac78396d4d63ccd7a10.jpg',
-  },
-  {
-    id: 2,
-    name: 'Spaghetti Carbonara',
-    image: 'https://i.pinimg.com/736x/fe/07/27/fe072747470c09eeadfcac3f450a130e.jpg',
-  },
-  {
-    id: 3,
-    name: 'Matcha Latte',
-    image: 'https://i.pinimg.com/736x/3d/f0/38/3df0387ca10b830837f1bf2f80559762.jpg',
-  },
-  {
-    id: 4,
-    name: 'Tiramisu',
-    image: 'https://i.pinimg.com/736x/eb/67/cd/eb67cdd4329512df261dcde1dce229f9.jpg',
-  },
-])
+const recipes = ref<Recipe[]>([])
 const router = useRouter()
 
+const apiEndpoint = `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/recipes`
+
+function requestRecipes(): void {
+  axios
+    .get<Recipe[]>(apiEndpoint)
+    .then((res) => {
+      console.log(res.data)
+      recipes.value = res.data
+    })
+    .catch((error) => {
+      logError(error)
+    })
+}
+
+function logError(err: unknown): void {
+    alert('Something went wrong ... check your browser console for more information')
+    console.error(err)
+}
 function goToRecipeDetail(recipeId: number) {
   router.push(`/recipes/${recipeId}`)
 }
+onMounted(() => {
+  requestRecipes()
+})
 </script>
 
 <template>
@@ -49,7 +51,7 @@ function goToRecipeDetail(recipeId: number) {
         class="recipe-card"
         @click="goToRecipeDetail(recipe.id)"
       >
-        <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
+      <img :src="recipe.recipeImage" alt="Recipe image" class="recipe-image" />
         <h2 class="recipe-name">{{ recipe.name }}</h2>
       </div>
     </div>
