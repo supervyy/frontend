@@ -14,7 +14,8 @@ interface Recipe {
 const recipes = ref<Recipe[]>([])
 const router = useRouter()
 
-const apiEndpoint = 'https://webtech-backend-qfry.onrender.com/recipes'
+const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
+const apiEndpoint = baseURL + '/recipes'
 
 function requestRecipes(): void {
   axios
