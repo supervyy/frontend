@@ -13,25 +13,26 @@
 </template>
 
 <script lang="ts">
-import Category from "@/components/Category.vue";
+import Category from '@/components/Category.vue'
 
 export default {
-  name: "CategoriesView",
+  name: 'CategoriesView',
   components: {
     Category,
   },
   data() {
     return {
       categories: [
-        { title: "Beef", count: 1 },
-        { title: "Breakfast", count: 2 },
-        { title: "Carrots", count: 3 },
-        { title: "Dinner", count: 4 },
-        { title: "Food", count: 1 },
+        { title: 'Appetizers', count: 1 },
+        { title: 'Breakfast', count: 2 },
+        { title: 'Vegetarian', count: 3 },
+        { title: 'Main Course', count: 4 },
+        { title: 'Dessert', count: 1 },
+        { title: 'Drinks', count: 1 },
       ],
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>

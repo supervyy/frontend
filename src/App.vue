@@ -1,22 +1,35 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 
+interface Recipe{
+  id: number,
+  name: string,
+  description: string,
+  ingredients: string[],
+
+
+}
+
 </script>
 
 <template>
   <header>
     <div class="nav-links">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="home">Home</RouterLink>
         <RouterLink to="recipes-composition-api">Recipes</RouterLink>
         <RouterLink to="category">Category</RouterLink>
         <img src="https://i.pinimg.com/736x/9a/ba/3f/9aba3fd90771ca191007054b3414904d.jpg ">
       </nav>
     </div>
   </header>
+  <RouterView />
   <main>
-    <RouterView />
+
+
+
   </main>
+
 </template>
 
 <style scoped>

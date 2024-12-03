@@ -1,50 +1,59 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 defineProps<{ title: string }>()
-const recipes = ref([
+
+interface Recipe {
+  id: number
+  name: string
+  image: string
+}
+const recipes = ref<Recipe[]>([
   {
     id: 1,
-    name: "Korean Fried Chicken",
-    image: "https://i.pinimg.com/736x/7f/4e/54/7f4e542859a08ac78396d4d63ccd7a10.jpg",
+    name: 'Korean Fried Chicken',
+    image: 'https://i.pinimg.com/736x/7f/4e/54/7f4e542859a08ac78396d4d63ccd7a10.jpg',
   },
   {
     id: 2,
-    name: "Spaghetti Carbonara",
-    image: "https://i.pinimg.com/736x/fe/07/27/fe072747470c09eeadfcac3f450a130e.jpg",
+    name: 'Spaghetti Carbonara',
+    image: 'https://i.pinimg.com/736x/fe/07/27/fe072747470c09eeadfcac3f450a130e.jpg',
   },
   {
     id: 3,
-    name: "Matcha Latte",
-    image: "https://i.pinimg.com/736x/3d/f0/38/3df0387ca10b830837f1bf2f80559762.jpg",
+    name: 'Matcha Latte',
+    image: 'https://i.pinimg.com/736x/3d/f0/38/3df0387ca10b830837f1bf2f80559762.jpg',
   },
   {
     id: 4,
-    name: "Tiramisu",
-    image: "https://i.pinimg.com/736x/eb/67/cd/eb67cdd4329512df261dcde1dce229f9.jpg",
+    name: 'Tiramisu',
+    image: 'https://i.pinimg.com/736x/eb/67/cd/eb67cdd4329512df261dcde1dce229f9.jpg',
   },
-]);
-function goToRecipeDetail(recipeId: number) {
-  router.push(`/recipes/${recipeId}`);
-}
+])
+const router = useRouter()
 
+function goToRecipeDetail(recipeId: number) {
+  router.push(`/recipes/${recipeId}`)
+}
 </script>
 
 <template>
-<div class="recipe-list">
-  <h1 class="title">{{title}}</h1>
-  <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
-  <div class="recipes-container">
-    <div
-      v-for="recipe in recipes"
-         :key="recipe.id"
-         class="recipe-card"
-         @click="goToRecipeDetail(recipe.id)">
-      <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
-      <h2 class="recipe-name">{{ recipe.name }}</h2>
+  <div class="recipe-list">
+    <h1 class="title">{{ title }}</h1>
+    <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
+    <div class="recipes-container">
+      <div
+        v-for="recipe in recipes"
+        :key="recipe.id"
+        class="recipe-card"
+        @click="goToRecipeDetail(recipe.id)"
+      >
+        <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
+        <h2 class="recipe-name">{{ recipe.name }}</h2>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -61,9 +70,8 @@ function goToRecipeDetail(recipeId: number) {
   font-weight: 600;
   text-align: center;
   margin: 5rem 0 0 0;
-
 }
-.recipes-container{
+.recipes-container {
   display: flex;
   margin-top: 2rem;
   gap: 20px;
@@ -93,7 +101,7 @@ function goToRecipeDetail(recipeId: number) {
 }
 
 .recipe-name {
-  font-family: "Arial Nova",sans-serif;
+  font-family: 'Arial Nova', sans-serif;
   font-size: 1.1rem;
   margin: 10px 0;
 }

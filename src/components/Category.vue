@@ -23,8 +23,8 @@ export default {
 
 <style scoped>
 .category-card {
-  background-color: #3a3a3a;
-  color: #fff;
+  background-color: antiquewhite;
+  color: black ;
   padding: 1rem;
   border-radius: 5px;
   text-align: center;
@@ -45,6 +45,6 @@ h3 {
 p {
   margin: 0.5rem 0 0;
   font-size: 0.9rem;
-  color: #ddd;
+  color: black ;
 }
 </style>
