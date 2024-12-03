@@ -14,7 +14,7 @@ interface Recipe {
 const recipes = ref<Recipe[]>([])
 const router = useRouter()
 
-const apiEndpoint = `${import.meta.env.VITE_APP_BACKEND_BASE_URL}/recipes`
+const apiEndpoint = 'https://webtech-backend-qfry.onrender.com/recipes'
 
 function requestRecipes(): void {
   axios
@@ -29,8 +29,8 @@ function requestRecipes(): void {
 }
 
 function logError(err: unknown): void {
-    alert('Something went wrong ... check your browser console for more information')
-    console.error(err)
+  alert('Something went wrong ... check your browser console for more information')
+  console.error(err)
 }
 function goToRecipeDetail(recipeId: number) {
   router.push(`/recipes/${recipeId}`)
@@ -51,7 +51,7 @@ onMounted(() => {
         class="recipe-card"
         @click="goToRecipeDetail(recipe.id)"
       >
-      <img :src="recipe.recipeImage" alt="Recipe image" class="recipe-image" />
+        <img :src="recipe.recipeImage" alt="Recipe image" class="recipe-image" />
         <h2 class="recipe-name">{{ recipe.name }}</h2>
       </div>
     </div>
