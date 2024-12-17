@@ -9,13 +9,12 @@ defineProps<{ title: string }>()
 interface Recipe {
   id: number
   name: string
-  recipeImage: string
+  image: string
 }
 const recipes = ref<Recipe[]>([])
 const router = useRouter()
-
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
-const apiEndpoint = baseURL + '/recipes'
+const apiEndpoint = baseURL+'/recipes'
 
 function requestRecipes(): void {
   axios
@@ -30,10 +29,11 @@ function requestRecipes(): void {
 }
 
 function logError(err: unknown): void {
-  alert('Something went wrong ... check your browser console for more information')
-  console.error(err)
+    alert('Something went wrong ... check your browser console for more information')
+    console.error(err)
 }
 function goToRecipeDetail(recipeId: number) {
+  console.log('Navigating to recipe detail with ID:', recipeId) // Debugging log
   router.push(`/recipes/${recipeId}`)
 }
 onMounted(() => {
@@ -52,7 +52,7 @@ onMounted(() => {
         class="recipe-card"
         @click="goToRecipeDetail(recipe.id)"
       >
-        <img :src="recipe.recipeImage" alt="Recipe image" class="recipe-image" />
+      <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
         <h2 class="recipe-name">{{ recipe.name }}</h2>
       </div>
     </div>
