@@ -1,27 +1,45 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 
-defineProps<{ title: string }>()
+// const props = defineProps<{ title: string }>() // Removed title prop
 
 interface Recipe {
   id: number
   name: string
   image: string
+  category: string // Added category property
 }
 const recipes = ref<Recipe[]>([])
 const router = useRouter()
+const route = useRoute()
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
 const apiEndpoint = baseURL+'/recipes'
+const categoryFilter = ref<string | null>(null)
+
+const displayTitle = computed(() =>
+  categoryFilter.value ? categoryFilter.value : 'Recipes'
+)
 
 function requestRecipes(): void {
+  console.log('Requesting all recipes from:', apiEndpoint)
   axios
     .get<Recipe[]>(apiEndpoint)
     .then((res) => {
-      console.log(res.data)
-      recipes.value = res.data
+      const allRecipes = res.data
+      console.log('Fetched recipes:', allRecipes)
+
+      // Filter recipes by category if categoryFilter is set
+      if (categoryFilter.value) {
+        console.log(`Filtering recipes by category: ${categoryFilter.value}`)
+        recipes.value = allRecipes.filter(recipe =>
+          recipe.category.toLowerCase() === categoryFilter.value!.toLowerCase()
+        )
+      } else {
+        recipes.value = allRecipes
+      }
     })
     .catch((error) => {
       logError(error)
@@ -33,17 +51,36 @@ function logError(err: unknown): void {
     console.error(err)
 }
 function goToRecipeDetail(recipeId: number) {
-  console.log('Navigating to recipe detail with ID:', recipeId) // Debugging log
+  console.log('Navigating to recipe detail with ID:', recipeId)
   router.push(`/recipes/${recipeId}`)
 }
+
 onMounted(() => {
+  if (route.params.category) {
+    categoryFilter.value = String(route.params.category)
+  }
   requestRecipes()
 })
+
+// Watch for changes in the route's category parameter
+watch(
+  () => route.params.category,
+  (newCategory) => {
+    categoryFilter.value = newCategory ? String(newCategory) : null
+    console.log(`Route category changed to: ${categoryFilter.value}`)
+    requestRecipes()
+  }
+)
+
+const isLiked = ref(false);
+function toggleLike() {
+  isLiked.value = !isLiked.value;
+}
 </script>
 
 <template>
+  <h1 class="title">{{ displayTitle }}</h1>
   <div class="recipe-list">
-    <h1 class="title">{{ title }}</h1>
     <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
     <div class="recipes-container">
       <div
@@ -52,11 +89,19 @@ onMounted(() => {
         class="recipe-card"
         @click="goToRecipeDetail(recipe.id)"
       >
+      <!-- Rezeptbild -->
       <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
-        <h2 class="recipe-name">{{ recipe.name }}</h2>
+       <!-- Rezeptname -->
+      <h2 class="recipe-name">{{ recipe.name }}</h2>
+       <!-- Herz-Symbol -->
+      <div class="heart-container" @click.stop="toggleLike"> <!-- .stop hinzugefügt -->
+        <div :class="['heart', { liked: isLiked }]"></div>
+      </div>
+
       </div>
     </div>
   </div>
+
 </template>
 
 <style scoped>
@@ -71,16 +116,28 @@ onMounted(() => {
   font-family: 'Poppins', sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
-  text-align: center;
-  margin: 5rem 0 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7rem;
+  margin-left: 34rem;
+
 }
 .recipes-container {
+  flex-wrap: wrap;
   display: flex;
-  margin-top: 2rem;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+
+  margin-top: 8rem;
   gap: 20px;
 }
 .recipe-card {
-  width: 300px;
+  width: 280px;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -111,4 +168,7 @@ onMounted(() => {
 .warning {
   color: red;
 }
+
+
+
 </style>

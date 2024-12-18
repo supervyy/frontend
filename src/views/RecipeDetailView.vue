@@ -52,54 +52,103 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="recipe-detail">
-    <div v-if="recipe" class="detail-container">
-      <h1 class="recipe-title">{{ recipe.name }}</h1>
-      <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
-      <p class="recipe-description">{{ recipe.description }}</p>
-      <p class="recipe-category"><strong>Category:</strong> {{ recipe.category }}</p>
-      <p class="recipe-ingredients"><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-      <p class="recipe-instructions"><strong>Instructions:</strong> {{ recipe.instructions }}</p>
-      <p class="recipe-author"><strong>Author:</strong> {{ recipe.author }}</p>
-    </div>
-    <div v-else-if="error" class="error-page">
-      <h2>{{ error }}</h2>
-    </div>
-    <div v-else class="error-page">
-      <h2>Loading...</h2>
+  <div class="recipe-detail-container">
+    <div class="recipe-detail">
+      <div class="left-section">
+        <div class="recipe-image-container">
+          <img v-if="recipe" :src="recipe.image" alt="Rezeptbild" class="recipe-image" />
+        </div>
+      </div>
+      <div class="right-section">
+        <h1 class="recipe-title" v-if="recipe">{{ recipe.name }}</h1>
+        <div class="recipe-info">
+          <p class="recipe-description" v-if="recipe">{{ recipe.description }}</p>
+          <div class="recipe-meta" v-if="recipe">
+            <p class="recipe-category"><strong>Kategorie:</strong> {{ recipe.category }}</p>
+          </div>
+          <div class="recipe-details" v-if="recipe">
+            <p class="recipe-ingredients"><strong>Zutaten:</strong> {{ recipe.ingredients }}</p>
+            <p class="recipe-instructions"><strong>Zubereitung:</strong> {{ recipe.instructions }}</p>
+            <p class="recipe-author"><strong>Autor:</strong> {{ recipe.author }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.recipe-detail {
-  padding: 20px;
+.recipe-detail-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+  width: 100%;
 }
-.detail-container {
-  text-align: center;
-}
+
 .recipe-title {
-  font-size: 2em;
-  margin-bottom: 10px;
-}
-.recipe-image {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-}
-.recipe-description {
-  font-size: 1.2em;
-}
-.error-page {
-  color: red;
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 600;
   text-align: center;
-  padding: 20px;
+  margin-top: 2rem;
+  margin-right: 5rem;
 }
-.recipe-category,
+
+.recipe-detail {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 2rem;
+  gap: 4rem;
+}
+
+.left-section {
+  flex: 0 0 35%;
+  margin-left: 8rem;
+}
+
+.recipe-image-container {
+  width: 100%;
+}
+
+.recipe-image {
+  width: 500px; /* Verdoppelt von 400px auf 800px */
+  height: 300px; /* Verdoppelt von 300px auf 600px */
+  object-fit: cover;
+  border-radius: 8px;
+
+  transform: translate(-30%, 65%);
+}
+
+.right-section {
+  flex: 0 0 45%;
+  margin-top: 5rem;
+  margin-right: 30rem;
+}
+
+.recipe-info {
+  text-align: left;
+  font-size: 100%; /* Reduziert von 200% */
+}
+
+.recipe-description {
+  margin-bottom: 2rem; /* Reduziert von 3rem */
+  font-size: 1.25rem; /* Reduziert von 1.8rem */
+}
+
+.recipe-meta {
+  margin-bottom: 2rem; /* Reduziert von 3rem */
+  font-size: 1.25rem; /* Reduziert von 1.8rem */
+}
+
+.recipe-details {
+  font-size: 1.25rem; /* Reduziert von 1.8rem */
+}
+
 .recipe-ingredients,
 .recipe-instructions,
 .recipe-author {
-  font-size: 1.1em;
-  margin-top: 10px;
+  margin-bottom: 0.75rem; /* Reduziert von 1rem */
+  font-size: 1.25rem; /* Reduziert von 1.8rem */
 }
 </style>

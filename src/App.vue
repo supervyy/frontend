@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 
-interface Recipe{
-  id: number,
-  name: string,
-  description: string,
-  ingredients: string[],
 
-
-}
 
 </script>
 
@@ -16,9 +9,9 @@ interface Recipe{
   <header>
     <div class="nav-links">
       <nav>
-        <RouterLink to="home">Home</RouterLink>
-        <RouterLink to="recipes-composition-api">Recipes</RouterLink>
-        <RouterLink to="category">Category</RouterLink>
+        <RouterLink :to="{ name: 'recipes-composition-api' }">Recipes</RouterLink>
+        <RouterLink :to="{ name: 'category' }">Category</RouterLink>
+        <RouterLink :to="{ name: 'favorites' }">Favorites</RouterLink>
         <img src="https://i.pinimg.com/736x/9a/ba/3f/9aba3fd90771ca191007054b3414904d.jpg ">
       </nav>
     </div>

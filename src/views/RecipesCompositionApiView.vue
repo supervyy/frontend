@@ -5,13 +5,11 @@ import RecipesCompositionApiList from '@/components/RecipesCompositionApiList.vu
 
 <template>
 
-    <RecipesCompositionApiList title="Lülis Recipes" />
+    <RecipesCompositionApiList  />
 
 
 </template>
 
 <style scoped>
-title{
 
-}
 </style>

@@ -1,20 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RecipesCompositionApiView from '@/views/RecipesCompositionApiView.vue'
 import CategoryView from '@/views/CategoryView.vue'
-import HomeView from '@/views/HomeView.vue'
+import FavoritesView from '@/views/FavoritesView.vue'
 import RecipeDetailView from '@/views/RecipeDetailView.vue'
+import RecipesCompositionApiList from '@/components/RecipesCompositionApiList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/home',
-      name: 'home',
-      component: HomeView,
+      path: '/favorites',
+      name: 'favorites',
+      component: FavoritesView
     },
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/recipes-composition-api'
     },
     {
       path: '/recipes-composition-api',
@@ -33,8 +34,13 @@ const router = createRouter({
       props: true // Ensure route params are passed as props
     },
     {
+      path: '/recipes/category/:category',
+      name: 'RecipesByCategory',
+      component: RecipesCompositionApiList, // Changed component from CategoryView to RecipesCompositionApiList
+    },
+    {
       path: '/:pathMatch(.*)*',
-      redirect: '/home'
+      redirect: '/recipes-composition-api'
     }
   ],
 })
