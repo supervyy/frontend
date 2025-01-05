@@ -183,7 +183,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Exactly the same styles as CreateRecipe.vue */
 .create-recipe {
   max-width: 800px;
   margin: 8rem auto;
@@ -338,7 +337,7 @@ textarea.valid:focus {
 }
 
 .ingredients-container {
-  background-color: #fff;
+  background-color: antiquewhite;
   border-radius: 12px;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -389,8 +388,6 @@ textarea.valid:focus {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: 300px;
-  overflow-y: auto;
 }
 
 .ingredient-item {
@@ -398,14 +395,14 @@ textarea.valid:focus {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background-color: #f8f8f8;
+  background-color: antiquewhite;
   border-radius: 8px;
   transition: all 0.3s ease;
   width: 100%;
 }
 
 .ingredient-item:hover {
-  background-color: #f0f0f0;
+  background-color: #f8d5b4;
   transform: translateX(4px);
 }
 
