@@ -93,6 +93,12 @@ async function confirmDelete() {
     }
   }
 }
+
+function goToEditPage() {
+  if (recipe.value) {
+    router.push(`/recipes/${recipe.value.id}/edit`)
+  }
+}
 </script>
 
 <template>
@@ -105,7 +111,7 @@ async function confirmDelete() {
           <img v-if="recipe" :src="recipe.image" alt="Recipe Image" class="recipe-image" />
         </div>
         <div class="button-container">
-          <button class="button">
+          <button class="button" @click="goToEditPage">
             <svg
               class="svg-icon"
               fill="none"
