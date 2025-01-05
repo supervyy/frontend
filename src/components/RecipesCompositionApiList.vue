@@ -109,23 +109,22 @@ function toggleLike() {
   flex-direction: column;
   text-align: center;
   font-family: 'Arial', sans-serif;
-  margin-top: 5rem; /* increased from 3rem to 5rem */
+  margin-top: 7rem; /* increased from 3rem to 5rem */
 }
 .title {
   font-family: 'Poppins', sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
-  display: block;  /* changed from flex to block */
-  text-align: center; /* center the text */
-  margin: 10rem 0 20rem 34rem; /* shifted title to the right */
-  /* removed margin-left: 34rem */
+  display: block;
+  text-align: center;
+  margin: 7rem 0 20rem 34rem;
 }
 .recipes-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   max-width: 1000px; /* reduced from 1200px */
-  margin: 10rem 0 0 -40rem; /* changed to negative margin to move far left */
+  margin: 5rem 0 0 -40rem; /* changed to negative margin to move far left */
 }
 .recipe-card {
   width: 280px;
