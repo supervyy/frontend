@@ -4,6 +4,8 @@ import CategoryView from '@/views/CategoryView.vue'
 import FavoritesView from '@/views/FavoritesView.vue'
 import RecipeDetailView from '@/views/RecipeDetailView.vue'
 import RecipesCompositionApiList from '@/components/RecipesCompositionApiList.vue'
+import CreateRecipe from '@/views/CreateRecipe.vue'
+import EditRecipe from '@/views/EditRecipe.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,9 +41,20 @@ const router = createRouter({
       component: RecipesCompositionApiList, // Changed component from CategoryView to RecipesCompositionApiList
     },
     {
+      path: '/recipes/:id/edit',
+      name: 'edit-recipe',
+      component: EditRecipe,
+      props: true
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/recipes-composition-api'
-    }
+    },
+    {
+      path: '/create-recipe',
+      name: 'create-recipe',
+      component: CreateRecipe
+    },
   ],
 })
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router' // Add useRouter
 import axios from 'axios'
 
 interface Recipe {
@@ -15,6 +15,7 @@ interface Recipe {
 }
 
 const route = useRoute()
+const router = useRouter() // Add router instance
 const recipe = ref<Recipe | null>(null)
 const error = ref<string | null>(null)
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
@@ -75,6 +76,12 @@ const formattedIngredients = computed(() => {
     .filter((ingredient) => ingredient.trim())
     .map((ingredient) => ingredient.trim())
 })
+
+function goToEditPage() {
+  if (recipe.value) {
+    router.push(`/recipes/${recipe.value.id}/edit`)
+  }
+}
 </script>
 
 <template>
@@ -87,7 +94,7 @@ const formattedIngredients = computed(() => {
           <img v-if="recipe" :src="recipe.image" alt="Recipe Image" class="recipe-image" />
         </div>
         <div class="button-container">
-          <button class="edit-btn">
+          <button class="edit-btn" @click="goToEditPage">
             <span class="material-icons">Edit</span>
           </button>
           <button class="delete-btn">
