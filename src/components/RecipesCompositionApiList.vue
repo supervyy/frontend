@@ -4,7 +4,6 @@ import axios from 'axios'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 
-// const props = defineProps<{ title: string }>() // Removed title prop
 
 interface Recipe {
   id: number
@@ -110,31 +109,23 @@ function toggleLike() {
   flex-direction: column;
   text-align: center;
   font-family: 'Arial', sans-serif;
-  margin-top: 3rem;
+  margin-top: 5rem; /* increased from 3rem to 5rem */
 }
 .title {
   font-family: 'Poppins', sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 7rem;
-  margin-left: 34rem;
-
+  display: block;  /* changed from flex to block */
+  text-align: center; /* center the text */
+  margin: 10rem 0 20rem 34rem; /* shifted title to the right */
+  /* removed margin-left: 34rem */
 }
 .recipes-container {
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -20%);
-
-  margin-top: 8rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  max-width: 1000px; /* reduced from 1200px */
+  margin: 10rem 0 0 -40rem; /* changed to negative margin to move far left */
 }
 .recipe-card {
   width: 280px;
@@ -151,7 +142,7 @@ function toggleLike() {
 
 @media screen and (min-width: 576px) {
   .recipe-list {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
   }
   .recipe-image {
     width: 100%;

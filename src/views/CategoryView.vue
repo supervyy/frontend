@@ -43,6 +43,7 @@ export default {
         { category: 'Main Course', count: 0 },
         { category: 'Dessert', count: 0 },
         { category: 'Drinks', count: 0 },
+        { category: 'Vegetarian', count: 0},
       ],
     };
   },
