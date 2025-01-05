@@ -168,8 +168,8 @@ select:focus {
 }
 
 select option {
-  background-color: #f3f3f3; /* Default background color for options */
-  color: #333; /* Text color */
+  background-color: #f3f3f3;
+  color: #333;
 }
 
 select option:hover,

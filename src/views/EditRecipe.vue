@@ -15,17 +15,10 @@ const recipe = ref({
   ingredients: '',
   instructions: '',
   author: '',
-  favorite: false
+  favorite: false,
 })
 
-const categories = [
-  'Appetizers',
-  'Breakfast',
-  'Main Course',
-  'Dessert',
-  'Drinks',
-  'Vegetarian'
-]
+const categories = ['Appetizers', 'Breakfast', 'Main Course', 'Dessert', 'Drinks', 'Vegetarian']
 
 const error = ref<string | null>(null)
 
@@ -101,7 +94,7 @@ onMounted(() => {
 
       <div class="form-group checkbox-group">
         <label class="checkbox-label">
-          <input type="checkbox" v-model="recipe.favorite">
+          <input type="checkbox" v-model="recipe.favorite" />
           Add to Favorites
         </label>
       </div>
@@ -145,33 +138,83 @@ label {
   font-weight: 600;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   padding: 0.8rem;
-  border: 1px solid #ddd;
+  border: 2px solid transparent;
   border-radius: 6px;
   font-family: inherit;
   font-size: 1rem;
   width: 100%;
   max-width: 600px;
+  outline: none;
+  overflow: hidden;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  transition: all 0.5s;
 }
-
+input:hover,
+input:focus,
+select:hover,
+select:focus,
+textarea:hover,
+textarea:focus {
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+  background-color: white;
+}
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked {
+  background-color: antiquewhite !important;
+  color: #333 !important;
+  border: 2px solid antiquewhite;
+}
+select:hover,
+select:focus {
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+  background-color: white;
+  color: #333;
+}
+select option {
+  background-color: #f3f3f3;
+  color: #333;
+}
 textarea {
   min-height: 300px;
   resize: vertical;
   width: 600px;
 }
-
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #f3f3f3;
+  border: 2px solid transparent;
+  color: #333;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
 .submit-btn {
-  background-color: antiquewhite;
+  background-color: #f3f3f3;
   color: #333;
   padding: 1rem 2rem;
   cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 1rem;
+  transition: all 0.5s;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
 }
 
 .submit-btn:hover {
-  background-color: #ffe4c4;
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+  background-color: antiquewhite;
 }
 
 .error {
@@ -191,13 +234,13 @@ textarea {
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  accent-color: antiquewhite;
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type='checkbox'] {
   width: 18px;
   height: 18px;
   cursor: pointer;
+  background-color: antiquewhite;
 }
 </style>
-
-
