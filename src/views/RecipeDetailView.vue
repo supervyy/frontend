@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router' // Add useRouter
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import DeleteConfirmation from '@/components/DeleteConfirmation.vue'
 
 interface Recipe {
   id: number
@@ -15,7 +16,7 @@ interface Recipe {
 }
 
 const route = useRoute()
-const router = useRouter() // Add router instance
+const router = useRouter()
 const recipe = ref<Recipe | null>(null)
 const error = ref<string | null>(null)
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
@@ -76,10 +77,20 @@ const formattedIngredients = computed(() => {
     .filter((ingredient) => ingredient.trim())
     .map((ingredient) => ingredient.trim())
 })
+const showDelete = ref(false)
 
-function goToEditPage() {
+function handleDelete() {
+  showDelete.value = true
+}
+async function confirmDelete() {
   if (recipe.value) {
-    router.push(`/recipes/${recipe.value.id}/edit`)
+    try {
+      await axios.delete(`${baseURL}/recipes/${recipe.value.id}`)
+      showDelete.value = false
+      router.push('/recipes')
+    } catch (error) {
+      console.error('Error deleting recipe:', error)
+    }
   }
 }
 </script>
@@ -94,13 +105,47 @@ function goToEditPage() {
           <img v-if="recipe" :src="recipe.image" alt="Recipe Image" class="recipe-image" />
         </div>
         <div class="button-container">
-          <button class="edit-btn" @click="goToEditPage">
-            <span class="material-icons">Edit</span>
+          <button class="button">
+            <svg
+              class="svg-icon"
+              fill="none"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g stroke="#0a050c" stroke-linecap="round" stroke-width="2">
+                <path d="m20 20h-16"></path>
+                <path
+                  clip-rule="evenodd"
+                  d="m14.5858 4.41422c.781-.78105 2.0474-.78105 2.8284 0 .7811.78105.7811 2.04738 0 2.82843l-8.28322 8.28325-3.03046.202.20203-3.0304z"
+                  fill-rule="evenodd"
+                ></path>
+              </g>
+            </svg>
+            <span class="lable">Edit</span>
           </button>
-          <button class="delete-btn">
-            <span class="material-icons">Delete</span>
+          <button class="btn" @click.stop="handleDelete">
+            <svg
+              viewBox="0 0 15 17.5"
+              height="17.5"
+              width="15"
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon"
+            >
+              <path
+                transform="translate(-2.5 -1.25)"
+                d="M15,18.75H5A1.251,1.251,0,0,1,3.75,17.5V5H2.5V3.75h15V5H16.25V17.5A1.251,1.251,0,0,1,15,18.75ZM5,5V17.5H15V5Zm7.5,10H11.25V7.5H12.5V15ZM8.75,15H7.5V7.5H8.75V15ZM12.5,2.5h-5V1.25h5V2.5Z"
+                id="Fill"
+              ></path>
+            </svg>
           </button>
         </div>
+        <DeleteConfirmation
+          :show="showDelete"
+          @confirm="confirmDelete"
+          @cancel="showDelete = false"
+        />
       </div>
 
       <!-- Right Side - Details -->
@@ -330,31 +375,97 @@ function goToEditPage() {
 }
 
 .edit-btn,
-.delete-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.8rem;
-  border-radius: 6px;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 80px; /* Increased from 45px */
-  height: 40px; /* Adjusted for better proportions */
-  border: none;
-  background-color: antiquewhite;
-  color: #333; /* Darker text color for better contrast */
-}
-
-.material-icons {
-  font-size: 1rem; /* Reduced from 1.4rem */
-  margin-right: 0;
-  font-weight: 500;
-  text-transform: capitalize; /* Changed from uppercase to capitalize */
-}
-
 .edit-btn:hover,
-.delete-btn:hover {
-  background-color: #ffe4c4; /* Slightly darker antiquewhite for hover */
+.btn {
+  background-color: transparent;
+  position: relative;
+  border: none;
+}
+
+.btn::after {
+  content: 'delete';
+  position: absolute;
+  top: -1%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: fit-content;
+  height: fit-content;
+  background-color: rgb(168, 7, 7);
+  padding: 4px 8px;
+  border-radius: 5px;
+  transition: 0.2s linear;
+  transition-delay: 0.2s;
+  color: white;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.icon {
+  transform: scale(1.2);
+  transition: 0.2s linear;
+}
+
+.btn:hover > .icon {
+  transform: scale(1.5);
+}
+
+.btn:hover > .icon path {
+  fill: rgb(168, 7, 7);
+}
+
+.btn:hover::after {
+  visibility: visible;
+  opacity: 1;
+  top: -55%;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 2px;
+  height: 40px;
+  width: 85px;
+  border: none;
+  background: #adaaae3d;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.lable {
+  line-height: 15px;
+  font-size: 15px;
+  color: #0a050c;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+
+.button:hover {
+  background: antiquewhite;
+}
+
+.button:hover .svg-icon {
+  animation: lr 1s linear infinite;
+}
+
+@keyframes lr {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-1px);
+  }
+
+  75% {
+    transform: translateX(1px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 </style>
