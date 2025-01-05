@@ -4,23 +4,21 @@ import axios from 'axios'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 
-
 interface Recipe {
   id: number
   name: string
   image: string
-  category: string // Added category property
+  category: string
+  favorite: boolean
 }
 const recipes = ref<Recipe[]>([])
 const router = useRouter()
 const route = useRoute()
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
-const apiEndpoint = baseURL+'/recipes'
+const apiEndpoint = baseURL + '/recipes'
 const categoryFilter = ref<string | null>(null)
 
-const displayTitle = computed(() =>
-  categoryFilter.value ? categoryFilter.value : 'Recipes'
-)
+const displayTitle = computed(() => (categoryFilter.value ? categoryFilter.value : 'Recipes'))
 
 function requestRecipes(): void {
   console.log('Requesting all recipes from:', apiEndpoint)
@@ -30,11 +28,10 @@ function requestRecipes(): void {
       const allRecipes = res.data
       console.log('Fetched recipes:', allRecipes)
 
-      // Filter recipes by category if categoryFilter is set
       if (categoryFilter.value) {
         console.log(`Filtering recipes by category: ${categoryFilter.value}`)
-        recipes.value = allRecipes.filter(recipe =>
-          recipe.category.toLowerCase() === categoryFilter.value!.toLowerCase()
+        recipes.value = allRecipes.filter(
+          (recipe) => recipe.category.toLowerCase() === categoryFilter.value!.toLowerCase(),
         )
       } else {
         recipes.value = allRecipes
@@ -46,8 +43,8 @@ function requestRecipes(): void {
 }
 
 function logError(err: unknown): void {
-    alert('Something went wrong ... check your browser console for more information')
-    console.error(err)
+  alert('Something went wrong ... check your browser console for more information')
+  console.error(err)
 }
 function goToRecipeDetail(recipeId: number) {
   console.log('Navigating to recipe detail with ID:', recipeId)
@@ -61,19 +58,34 @@ onMounted(() => {
   requestRecipes()
 })
 
-// Watch for changes in the route's category parameter
 watch(
   () => route.params.category,
   (newCategory) => {
     categoryFilter.value = newCategory ? String(newCategory) : null
     console.log(`Route category changed to: ${categoryFilter.value}`)
     requestRecipes()
-  }
+  },
 )
 
-const isLiked = ref(false);
-function toggleLike() {
-  isLiked.value = !isLiked.value;
+function toggleFavorite(recipeId: number): void {
+  console.log('toggleFavorite called with id:', recipeId)
+  const recipe = recipes.value.find((r) => r.id === recipeId)
+  if (recipe) {
+    const newFavoriteStatus = !recipe.favorite
+
+    axios
+      .put(`${baseURL}/recipes/${recipeId}`, {
+        ...recipe,
+        favorite: newFavoriteStatus,
+      })
+      .then(() => {
+        recipe.favorite = newFavoriteStatus
+        console.log('New favorite status:', recipe.favorite)
+      })
+      .catch((error) => {
+        console.error('Error updating favorite status:', error)
+      })
+  }
 }
 </script>
 
@@ -88,19 +100,29 @@ function toggleLike() {
         class="recipe-card"
         @click="goToRecipeDetail(recipe.id)"
       >
-      <!-- Rezeptbild -->
-      <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
-       <!-- Rezeptname -->
-      <h2 class="recipe-name">{{ recipe.name }}</h2>
-       <!-- Herz-Symbol -->
-      <div class="heart-container" @click.stop="toggleLike"> <!-- .stop hinzugefügt -->
-        <div :class="['heart', { liked: isLiked }]"></div>
-      </div>
-
+        <!-- Rezeptbild -->
+        <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
+        <!-- Rezeptname -->
+        <h2 class="recipe-name">{{ recipe.name }}</h2>
+        <!-- Herz-Symbol -->
+        <button class="btn" @click.stop="toggleFavorite(recipe.id)">
+          <svg
+            :class="['icon', { 'icon-filled': recipe.favorite }]"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20.503"
+            height="20.625"
+            viewBox="0 0 17.503 15.625"
+          >
+            <path
+              id="Fill"
+              d="M8.752,15.625h0L1.383,8.162a4.824,4.824,0,0,1,0-6.762,4.679,4.679,0,0,1,6.674,0l.694.7.694-.7a4.678,4.678,0,0,1,6.675,0,4.825,4.825,0,0,1,0,6.762L8.752,15.624ZM4.72,1.25A3.442,3.442,0,0,0,2.277,2.275a3.562,3.562,0,0,0,0,5l6.475,6.556,6.475-6.556a3.563,3.563,0,0,0,0-5A3.443,3.443,0,0,0,12.786,1.25h-.01a3.415,3.415,0,0,0-2.443,1.038L8.752,3.9,7.164,2.275A3.442,3.442,0,0,0,4.72,1.25Z"
+              transform="translate(0 0)"
+            ></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -109,7 +131,7 @@ function toggleLike() {
   flex-direction: column;
   text-align: center;
   font-family: 'Arial', sans-serif;
-  margin-top: 7rem; /* increased from 3rem to 5rem */
+  margin-top: 5rem;
 }
 .title {
   font-family: 'Poppins', sans-serif;
@@ -123,8 +145,8 @@ function toggleLike() {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  max-width: 1000px; /* reduced from 1200px */
-  margin: 5rem 0 0 -40rem; /* changed to negative margin to move far left */
+  max-width: 1000px;
+  margin: 7rem 0 0 -40rem;
 }
 .recipe-card {
   width: 280px;
@@ -134,6 +156,7 @@ function toggleLike() {
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
+  position: relative;
 }
 .recipe-card:hover {
   transform: scale(1.05);
@@ -159,6 +182,61 @@ function toggleLike() {
   color: red;
 }
 
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  bottom: -1px;
+  right: -1px;
+  position: absolute;
+}
 
+.btn::after {
+  content: 'like';
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  font-size: 15px;
+  color: red;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva,
+    Verdana, sans-serif;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s linear;
+  top: 115%;
+}
 
+.icon {
+  width: 25px;
+  height: 25px;
+  transition: 0.2s linear;
+}
+.icon-filled path {
+  fill: red !important; /* Erzwingt die rote Farbe */
+}
+
+.icon path {
+  fill: #ddd; /* Standardfarbe für nicht ausgewählte Herzen */
+  transition: fill 0.2s linear;
+}
+
+.btn:hover > .icon path {
+  fill: rgb(231, 135, 109); /* Farbe bei Hover */
+}
+
+.btn:hover > .icon path {
+  fill: rgb(231, 135, 109);
+}
+
+.btn:hover::after {
+  visibility: visible;
+  opacity: 1;
+  top: 105%;
+}
 </style>

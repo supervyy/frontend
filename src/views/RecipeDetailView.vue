@@ -18,7 +18,7 @@ const route = useRoute()
 const recipe = ref<Recipe | null>(null)
 const error = ref<string | null>(null)
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
-const apiEndpoint = baseURL+'/recipes'
+const apiEndpoint = baseURL + '/recipes'
 
 function fetchRecipe(id: number): void {
   const url = `${apiEndpoint}/${id}`
@@ -54,7 +54,7 @@ const formattedInstructions = computed(() => {
   if (!recipe.value?.instructions) return []
   return recipe.value.instructions
     .split(/(\d+\.)/) // Split on numbers followed by dot
-    .filter(text => text.trim()) // Remove empty strings
+    .filter((text) => text.trim()) // Remove empty strings
     .map((text, index, array) => {
       if (text.match(/^\d+\.$/)) {
         // If it's a number, create a step number
@@ -64,7 +64,7 @@ const formattedInstructions = computed(() => {
       // Skip the text pieces that were already combined
       return array[index - 1]?.match(/^\d+\.$/) ? null : { stepNum: '', text: text.trim() }
     })
-    .filter(item => item && item.stepNum) // Keep only valid step items
+    .filter((item) => item && item.stepNum) // Keep only valid step items
 })
 
 // Add new computed property for ingredients formatting
@@ -72,8 +72,8 @@ const formattedIngredients = computed(() => {
   if (!recipe.value?.ingredients) return []
   return recipe.value.ingredients
     .split(',')
-    .filter(ingredient => ingredient.trim())
-    .map(ingredient => ingredient.trim())
+    .filter((ingredient) => ingredient.trim())
+    .map((ingredient) => ingredient.trim())
 })
 </script>
 
@@ -101,7 +101,9 @@ const formattedIngredients = computed(() => {
         <h1 class="recipe-title" v-if="recipe">{{ recipe.name }}</h1>
         <p class="recipe-description" v-if="recipe">{{ recipe.description }}</p>
         <div class="meta-info">
-          <p class="recipe-category" v-if="recipe"><strong>Category:</strong> {{ recipe.category }}</p>
+          <p class="recipe-category" v-if="recipe">
+            <strong>Category:</strong> {{ recipe.category }}
+          </p>
           <p class="recipe-author" v-if="recipe"><strong>Author:</strong> {{ recipe.author }}</p>
         </div>
       </div>
@@ -113,9 +115,11 @@ const formattedIngredients = computed(() => {
         <div class="instructions-section">
           <h2>Instructions</h2>
           <div v-if="recipe" class="instructions-list">
-            <div v-for="(step, index) in formattedInstructions"
-               :key="index"
-               class="instruction-step">
+            <div
+              v-for="(step, index) in formattedInstructions"
+              :key="index"
+              class="instruction-step"
+            >
               <h3 v-if="step" class="step-header">Step {{ step.stepNum }}</h3>
               <p v-if="step" class="step-text">{{ step.text }}</p>
             </div>
@@ -124,9 +128,11 @@ const formattedIngredients = computed(() => {
         <div class="ingredients-section">
           <h2>Ingredients</h2>
           <div v-if="recipe" class="ingredients-list">
-            <p v-for="(ingredient, index) in formattedIngredients"
-               :key="index"
-               class="ingredient-item">
+            <p
+              v-for="(ingredient, index) in formattedIngredients"
+              :key="index"
+              class="ingredient-item"
+            >
               {{ ingredient }}
             </p>
           </div>
@@ -199,7 +205,6 @@ const formattedIngredients = computed(() => {
 
 .meta-info strong {
   font-weight: 700; /* Increased from default 600 */
-
 }
 
 .bottom-section {
@@ -243,9 +248,12 @@ const formattedIngredients = computed(() => {
   border-bottom: none;
 }
 
-.ingredients-section,
 .instructions-section {
-  margin-bottom: 3rem;
+  margin-bottom: 5rem;
+}
+.ingredients-section {
+  margin-left: 5rem; /* Add margin to move ingredients right */
+  padding-right: 1rem;
 }
 
 .ingredients-section h2,
@@ -286,7 +294,7 @@ const formattedIngredients = computed(() => {
 }
 
 .step-header::after {
-  content: "";
+  content: '';
   flex-grow: 1;
   height: 1px;
   background-color: #e0e0e0;
