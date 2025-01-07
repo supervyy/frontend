@@ -21,7 +21,7 @@
 import axios from 'axios'
 
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
-const apiEndpoint = baseURL+'/recipes'
+const apiEndpoint = baseURL + '/recipes'
 
 interface Recipe {
   id: number
@@ -43,9 +43,9 @@ export default {
         { category: 'Main Course', count: 0 },
         { category: 'Dessert', count: 0 },
         { category: 'Drinks', count: 0 },
-        { category: 'Vegetarian', count: 0},
+        { category: 'Vegetarian', count: 0 },
       ],
-    };
+    }
   },
   methods: {
     async fetchRecipes() {
@@ -53,25 +53,25 @@ export default {
         const response = await axios.get<Recipe[]>(apiEndpoint)
         const recipes = response.data
         recipes.forEach((recipe: Recipe) => {
-          const category = this.categories.find(cat => cat.category === recipe.category)
+          const category = this.categories.find((cat) => cat.category === recipe.category)
           if (category) {
             category.count += 1
           }
         })
-        console.log('Fetched and counted recipes by category') // Hinzugefügt
+        console.log('Fetched and counted recipes by category')
       } catch (error) {
         console.error('Error fetching recipes:', error)
       }
     },
     navigateToCategory(category: string) {
-      console.log(`Navigating to category: ${category}`) // Hinzugefügt
+      console.log(`Navigating to category: ${category}`)
       this.$router.push({ name: 'RecipesByCategory', params: { category } })
     },
   },
   mounted() {
     this.fetchRecipes()
   },
-};
+}
 </script>
 
 <style scoped>

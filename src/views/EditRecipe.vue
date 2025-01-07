@@ -59,7 +59,7 @@ const validations = computed(() => ({
   category: isFieldValid(recipe.value.category),
   ingredients: recipe.value.ingredients.length > 0,
   instructions: isFieldValid(recipe.value.instructions),
-  author: isFieldValid(recipe.value.author)
+  author: isFieldValid(recipe.value.author),
 }))
 
 async function fetchRecipe(id: number) {
@@ -68,7 +68,7 @@ async function fetchRecipe(id: number) {
     const data = response.data
     recipe.value = {
       ...data,
-      ingredients: data.ingredients.split(', ').filter((i: string) => i) // Split string to array
+      ingredients: data.ingredients.split(', ').filter((i: string) => i), // Split string to array
     }
   } catch (err) {
     error.value = 'Failed to load recipe'
@@ -80,7 +80,7 @@ async function updateRecipe() {
   try {
     const recipeData = {
       ...recipe.value,
-      ingredients: recipe.value.ingredients.join(', ') // Join back to string for backend
+      ingredients: recipe.value.ingredients.join(', '), // Join back to string for backend
     }
     await axios.put(`${baseURL}/recipes/${route.params.id}`, recipeData)
     router.push(`/recipes/${route.params.id}`)
@@ -101,28 +101,49 @@ onMounted(() => {
     <h1>Edit Recipe</h1>
     <form @submit.prevent="updateRecipe" class="recipe-form">
       <div class="form-group">
-        <label for="name">Recipe Name:</label>
-        <input id="name" v-model="recipe.name" type="text" required
-               :class="{ 'valid': validations.name }" />
+        <label for="name">Recipe Name *</label>
+        <span class="helper-text">Enter a recipe name.</span>
+        <input
+          id="name"
+          v-model="recipe.name"
+          type="text"
+          required
+          :class="{ valid: validations.name }"
+        />
       </div>
 
       <div class="form-group">
-        <label for="description">Description:</label>
-        <textarea id="description" v-model="recipe.description" required
-                  :class="{ 'valid': validations.description }"></textarea>
+        <label for="description">Description *</label>
+        <span class="helper-text">Enter a recipe description.</span>
+        <textarea
+          id="description"
+          v-model="recipe.description"
+          required
+          :class="{ valid: validations.description }"
+        ></textarea>
       </div>
 
       <div class="form-group">
-        <label for="image">Image URL:</label>
-        <input id="image" v-model="recipe.image" type="url" required
-               :class="{ 'valid': validations.image }" />
+        <label for="image">Image URL *</label>
+        <span class="helper-text">Enter the URL of your recipe image.</span>
+        <input
+          id="image"
+          v-model="recipe.image"
+          type="url"
+          required
+          :class="{ valid: validations.image }"
+        />
       </div>
 
       <div class="form-group">
-        <label for="category">Category:</label>
-        <select id="category" v-model="recipe.category" required
-                :class="{ 'valid': validations.category }">
-          <option value="" disabled>Select a category</option>
+        <label for="category">Category *</label>
+        <span class="helper-text">Select a recipe category below.</span>
+        <select
+          id="category"
+          v-model="recipe.category"
+          required
+          :class="{ valid: validations.category }"
+        >
           <option v-for="category in categories" :key="category" :value="category">
             {{ category }}
           </option>
@@ -130,23 +151,16 @@ onMounted(() => {
       </div>
 
       <div class="form-group">
-        <label for="ingredients">Ingredients:</label>
+        <label for="ingredients">Ingredients *</label>
+        <span class="helper-text">Enter an ingredient and select the 'add ingredient' button.</span>
         <div class="ingredients-container">
-          <div class="ingredients-input-group">
-            <input
-              id="ingredients"
-              v-model="newIngredient"
-              type="text"
-              placeholder="Type an ingredient and press Enter or Add"
-              @keypress="handleKeyPress"
-              :class="{ 'valid': validations.ingredients }"
-            />
-            <button type="button" @click="addIngredient" class="add-ingredient-btn">
-              <span>+</span>
-            </button>
-          </div>
+          <div class="ingredients-input-group"></div>
           <ul class="ingredients-list">
-            <li v-for="(ingredient, index) in recipe.ingredients" :key="index" class="ingredient-item">
+            <li
+              v-for="(ingredient, index) in recipe.ingredients"
+              :key="index"
+              class="ingredient-item"
+            >
               <span class="ingredient-text">{{ ingredient }}</span>
               <button type="button" @click="removeIngredient(index)" class="remove-ingredient-btn">
                 <span>×</span>
@@ -154,18 +168,40 @@ onMounted(() => {
             </li>
           </ul>
         </div>
+        <input
+          id="ingredients"
+          v-model="newIngredient"
+          type="text"
+          @keypress="handleKeyPress"
+          :class="{ valid: validations.ingredients }"
+        />
+
+        <button type="button" @click="addIngredient" class="button add-ingredient-btn">
+          <span class="button__text">ADD INGREDIENT</span>
+        </button>
       </div>
 
       <div class="form-group">
-        <label for="instructions">Instructions (numbered steps):</label>
-        <textarea id="instructions" v-model="recipe.instructions" required
-                  :class="{ 'valid': validations.instructions }"></textarea>
+        <label for="instructions">Instructions (numbered steps) *</label>
+        <span class="helper-text">Add one instruction per line.</span>
+        <textarea
+          id="instructions"
+          v-model="recipe.instructions"
+          required
+          :class="{ valid: validations.instructions }"
+        ></textarea>
       </div>
 
       <div class="form-group">
-        <label for="author">Author:</label>
-        <input id="author" v-model="recipe.author" type="text" required
-               :class="{ 'valid': validations.author }" />
+        <label for="author">Author *</label>
+        <span class="helper-text">Enter your name.</span>
+        <input
+          id="author"
+          v-model="recipe.author"
+          type="text"
+          required
+          :class="{ valid: validations.author }"
+        />
       </div>
 
       <div class="form-group checkbox-group">
@@ -274,6 +310,39 @@ select {
     background-color 0.3s ease,
     border-color 0.3s ease;
 }
+select.valid {
+  background-color: white;
+}
+
+select.valid:hover,
+textarea.valid:hover,
+input.valid:focus,
+select.valid:focus {
+  background-color: antiquewhite;
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+}
+#ingredients {
+  background-color: #f3f3f3;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 0.8rem;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.5s;
+}
+
+#ingredients:hover,
+#ingredients:focus {
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+  background-color: white;
+}
+
+#ingredients.valid {
+  background-color: #f3f3f3;
+}
+
 .submit-btn {
   background-color: #f3f3f3;
   color: #333;
@@ -331,16 +400,9 @@ textarea.valid:hover,
 input.valid:focus,
 select.valid:focus,
 textarea.valid:focus {
-  background-color: antiquewhite;
-  border: 2px solid antiquewhite;
+  background-color: white;
+  border: 2px solid white;
   box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
-}
-
-.ingredients-container {
-  background-color: antiquewhite;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .ingredients-input-group {
@@ -358,27 +420,43 @@ textarea.valid:focus {
   transition: all 0.3s ease;
 }
 
-.add-ingredient-btn {
-  min-width: 42px;
-  height: 42px;
-  padding: 0;
-  border: none;
-  background-color: antiquewhite;
-  color: #666;
-  border-radius: 21px;
+.button {
+  --main-focus: #db65a0;
+  --font-color: #323232;
+  --bg-color: rgb(246, 205, 151);
+  --main-color: antiquewhite;
+  position: relative;
+  width: 150px;
+  height: 40px;
   cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 300;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  transition: all 0.2s;
 }
 
-.add-ingredient-btn:hover {
-  background-color: #f8d5b4;
-  transform: scale(1.05);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px var(--main-color);
+}
+
+.button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px var(--main-color);
+}
+
+.button .button__text {
+  color: var(--font-color);
+  font-weight: 550;
+  font-family: 'Poppins', sans-serif;
+}
+
+.button__icon {
+  display: none;
 }
 
 .ingredients-list {
@@ -402,7 +480,7 @@ textarea.valid:focus {
 }
 
 .ingredient-item:hover {
-  background-color: #f8d5b4;
+  background-color: white;
   transform: translateX(4px);
 }
 
@@ -432,5 +510,14 @@ textarea.valid:focus {
   background-color: #ff4444;
   color: white;
   transform: scale(1.1);
+}
+
+.helper-text {
+  font-size: 0.9rem;
+  color: inherit;
+  margin-top: -0.3rem;
+  margin-bottom: 0.3rem;
+  display: block;
+  font-weight: 400;
 }
 </style>

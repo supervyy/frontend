@@ -99,6 +99,10 @@ function goToEditPage() {
     router.push(`/recipes/${recipe.value.id}/edit`)
   }
 }
+
+function goToCategory(category: string) {
+  router.push(`/recipes/category/${category}`)
+}
 </script>
 
 <template>
@@ -160,7 +164,10 @@ function goToEditPage() {
         <p class="recipe-description" v-if="recipe">{{ recipe.description }}</p>
         <div class="meta-info">
           <p class="recipe-category" v-if="recipe">
-            <strong>Category:</strong> {{ recipe.category }}
+            <strong>Category:</strong>
+            <button class="category-input" @click="goToCategory(recipe.category)">
+              {{ recipe.category }}
+            </button>
           </p>
           <p class="recipe-author" v-if="recipe"><strong>Author:</strong> {{ recipe.author }}</p>
         </div>
@@ -252,6 +259,10 @@ function goToEditPage() {
   font-size: 1.1rem; /* Reduced from 1.25rem */
   margin-bottom: 2rem;
   line-height: 1.6;
+  hyphens: auto;
+  text-align: justify;
+  width: 120%; /* Increase width */
+  margin-right: -20%; /* Compensate for increased width */
 }
 
 .meta-info {
@@ -473,5 +484,28 @@ function goToEditPage() {
   100% {
     transform: translateX(0);
   }
+}
+
+.category-input {
+  display: inline-block;
+  background-color: #f3f3f3;
+  border: none;
+  border-radius: 6px;
+  padding: 0.3rem 0.8rem;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  width: auto;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.category-input:hover {
+  background-color: antiquewhite;
+}
+
+.category-input:focus {
+  outline: none;
 }
 </style>
