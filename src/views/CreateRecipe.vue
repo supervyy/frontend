@@ -165,12 +165,34 @@ async function submitRecipe() {
       <div class="form-group">
         <label for="instructions">Instructions (numbered steps) *</label>
         <span class="helper-text">Add one instruction per line.</span>
-        <textarea
+        <div class="instructions-container">
+          <ul class="instructions-list">
+            <li
+              v-for="(instruction, index) in recipe.instructions"
+              :key="index"
+              class="instruction-item"
+            >
+              <span class="instruction-text">{{ index + 1 }}. {{ instruction }}</span>
+              <button
+                type="button"
+                @click="removeInstruction(index)"
+                class="remove-instruction-btn"
+              >
+                ×
+              </button>
+            </li>
+          </ul>
+        </div>
+        <input
           id="instructions"
-          v-model="recipe.instructions"
-          required
-          :class="{ valid: validations.instructions }"
-        ></textarea>
+          v-model="newInstruction"
+          type="text"
+          placeholder="Type an instruction and press Enter or Add"
+          @keypress="handleInstructionKeyPress"
+        />
+        <button type="button" @click="addInstruction" class="button add-instruction-btn">
+          <span class="button__text">ADD INSTRUCTION</span>
+        </button>
       </div>
 
       <div class="form-group">
