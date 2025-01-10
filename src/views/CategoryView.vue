@@ -2,7 +2,8 @@
   <div class="recipe-list">
     <div class="categories-page">
       <h1>Categories</h1>
-      <div class="categories-grid">
+      <div v-if="error" class="error-message">{{ error }}</div>
+      <div v-else class="categories-grid">
         <div
           v-for="(category, index) in categories"
           :key="index"
@@ -45,6 +46,7 @@ export default {
         { category: 'Drinks', count: 0 },
         { category: 'Vegetarian', count: 0 },
       ],
+      error: null as string | null,
     }
   },
   methods: {
@@ -60,6 +62,7 @@ export default {
         })
         console.log('Fetched and counted recipes by category')
       } catch (error) {
+        this.error = 'Error fetching recipes'
         console.error('Error fetching recipes:', error)
       }
     },
@@ -174,5 +177,11 @@ export default {
     max-width: 300px;
     margin: 0 auto;
   }
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin: 2rem 0;
 }
 </style>

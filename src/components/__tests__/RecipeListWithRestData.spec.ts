@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
-import RecipesCompositionApiView from '../../views/RecipesCompositionApiView.vue'
 import RecipesCompositionApiList from '../../components/RecipesCompositionApiList.vue'
 import type { Recipe } from '../../model/recipe'
 
@@ -11,7 +10,7 @@ describe('RecipeListWithRestData', () => {
   it('should display a message if the recipe list from the backend is empty', async () => {
     vi.mocked(axios, true).get.mockResolvedValueOnce({ data: [] })
 
-    const wrapper = shallowMount(RecipesCompositionApiView)
+    const wrapper = shallowMount(RecipesCompositionApiList, {})
     await flushPromises()
 
     expect(wrapper.text()).toContain('No recipes found!')
@@ -44,10 +43,10 @@ describe('RecipeListWithRestData', () => {
     ]
     vi.mocked(axios, true).get.mockResolvedValueOnce({ data: recipesResponse })
 
-    const wrapper = shallowMount(RecipesCompositionApiView)
+    const wrapper = shallowMount(RecipesCompositionApiList)
     await flushPromises()
 
-    expect(wrapper.find('#recipe-container').exists()).toBeTruthy()
-    expect(wrapper.findAllComponents(RecipesCompositionApiList).length).toBe(recipesResponse.length)
+    expect(wrapper.find('.recipes-container').exists()).toBeTruthy()
+    expect(wrapper.findAll('.recipe-card').length).toBe(recipesResponse.length)
   })
 })

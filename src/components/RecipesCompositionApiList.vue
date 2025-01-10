@@ -52,14 +52,14 @@ function goToRecipeDetail(recipeId: number) {
 }
 
 onMounted(() => {
-  if (route.params.category) {
-    categoryFilter.value = String(route.params.category)
+  if (route?.params.category) {
+    categoryFilter.value = String(route?.params.category)
   }
   requestRecipes()
 })
 
 watch(
-  () => route.params.category,
+  () => route?.params.category,
   (newCategory) => {
     categoryFilter.value = newCategory ? String(newCategory) : null
     console.log(`Route category changed to: ${categoryFilter.value}`)

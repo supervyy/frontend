@@ -20,9 +20,9 @@ function requestFavoriteRecipes(): void {
   axios
     .get<Recipe[]>(apiEndpoint)
     .then((res) => {
-      console.log('Fetched recipes:', res.data) // Debugging line
-      recipes.value = res.data.filter(recipe => recipe.favorite)
-      console.log('Filtered favorite recipes:', recipes.value) // Debugging line
+      console.log('Fetched recipes:', res.data)
+      recipes.value = res.data.filter((recipe) => recipe.favorite)
+      console.log('Filtered favorite recipes:', recipes.value)
     })
     .catch((error) => {
       console.error('Error fetching favorite recipes:', error)
@@ -68,7 +68,7 @@ onMounted(() => {
   font-family: 'Poppins', sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
-  display: block;  /* changed from flex to block */
+  display: block; /* changed from flex to block */
   text-align: center; /* center the text */
   margin: 10rem 0 20rem 34rem; /* shifted title to the right */
   /* removed margin-left: 34rem */
@@ -112,7 +112,4 @@ onMounted(() => {
 .warning {
   color: red;
 }
-
-
-
 </style>
