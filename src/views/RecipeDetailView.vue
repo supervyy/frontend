@@ -11,7 +11,7 @@ interface Recipe {
   image: string
   category: string
   ingredients: string
-  instructions: string
+  instructions: string // Ensure instructions are stored as a single string
   author: string
 }
 
@@ -55,18 +55,12 @@ onMounted(() => {
 const formattedInstructions = computed(() => {
   if (!recipe.value?.instructions) return []
   return recipe.value.instructions
-    .split(/(\d+\.)/) // Split on numbers followed by dot
-    .filter((text) => text.trim()) // Remove empty strings
-    .map((text, index, array) => {
-      if (text.match(/^\d+\.$/)) {
-        // If it's a number, create a step number
-        const stepNum = text.replace('.', '')
-        return { stepNum, text: array[index + 1]?.trim() || '' }
-      }
-      // Skip the text pieces that were already combined
-      return array[index - 1]?.match(/^\d+\.$/) ? null : { stepNum: '', text: text.trim() }
-    })
-    .filter((item) => item && item.stepNum) // Keep only valid step items
+    .split('. ') // Split instructions by '. ' assuming each step ends with a period and space
+    .filter((instruction) => instruction.trim() !== '')
+    .map((instruction, index) => ({
+      stepNum: index + 1,
+      text: instruction.trim(),
+    }))
 })
 
 // Add new computed property for ingredients formatting
@@ -83,14 +77,21 @@ function handleDelete() {
   showDelete.value = true
 }
 async function confirmDelete() {
-  if (recipe.value) {
+  if (recipe.value && recipe.value.id) {
+    // Ensure ID exists
+    console.log('Attempting to delete recipe with ID:', recipe.value.id) // Debug log
     try {
       await axios.delete(`${baseURL}/recipes/${recipe.value.id}`)
+      console.log('Recipe deleted successfully') // Debug log
       showDelete.value = false
       router.push('/recipes')
     } catch (error) {
       console.error('Error deleting recipe:', error)
+      error.value = 'Failed to delete recipe' // Show error to user
     }
+  } else {
+    console.error('Recipe ID is missing') // Debug log for missing ID
+    error.value = 'Invalid recipe ID'
   }
 }
 
