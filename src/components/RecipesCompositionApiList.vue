@@ -20,6 +20,19 @@ const categoryFilter = ref<string | null>(null)
 
 const displayTitle = computed(() => (categoryFilter.value ? categoryFilter.value : 'Recipes'))
 
+const searchTerm = ref('')
+
+const filteredRecipes = computed(() => {
+  if (!searchTerm.value.trim()) return recipes.value
+  return recipes.value.filter(recipe =>
+    recipe.name.toLowerCase().includes(searchTerm.value.trim().toLowerCase())
+  )
+})
+
+function onSearch() {
+  console.log('Searching for:', searchTerm.value)
+}
+
 function requestRecipes(): void {
   console.log('Requesting all recipes from:', apiEndpoint)
   axios
@@ -91,11 +104,18 @@ function toggleFavorite(recipeId: number): void {
 
 <template>
   <h1 class="title">{{ displayTitle }}</h1>
+  <input
+    class="search-bar"
+    type="text"
+    v-model="searchTerm"
+    @input="onSearch"
+    placeholder="Search..."
+  />
   <div class="recipe-list">
     <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
     <div class="recipes-container">
       <div
-        v-for="recipe in recipes"
+        v-for="recipe in filteredRecipes"
         :key="recipe.id"
         class="recipe-card"
         @click="goToRecipeDetail(recipe.id)"
@@ -238,5 +258,16 @@ function toggleFavorite(recipeId: number): void {
   visibility: visible;
   opacity: 1;
   top: 105%;
+}
+
+.search-bar {
+  position: absolute;
+  top: 7.5rem; /* Adjust if needed */
+  right: 5rem; /* Adjust if needed */
+  width: 200px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 2px solid #ccc;
 }
 </style>
