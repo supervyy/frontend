@@ -1,11 +1,26 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 import RecipesCompositionApiList from '../../components/RecipesCompositionApiList.vue'
 import type { Recipe } from '../../model/recipe'
 
+// Mock vue-router
+vi.mock('vue-router', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+  useRoute: () => ({
+    query: { created: 'true' },
+    params: {},
+  }),
+}))
+
+vi.mock('axios')
+
 describe('RecipeListWithRestData', () => {
-  vi.mock('axios')
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
 
   it('should display a message if the recipe list from the backend is empty', async () => {
     vi.mocked(axios, true).get.mockResolvedValueOnce({ data: [] })
@@ -43,7 +58,7 @@ describe('RecipeListWithRestData', () => {
     ]
     vi.mocked(axios, true).get.mockResolvedValueOnce({ data: recipesResponse })
 
-    const wrapper = shallowMount(RecipesCompositionApiList)
+    const wrapper = shallowMount(RecipesCompositionApiList, {})
     await flushPromises()
 
     expect(wrapper.find('.recipes-container').exists()).toBeTruthy()
