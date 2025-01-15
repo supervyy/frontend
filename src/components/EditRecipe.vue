@@ -1,24 +1,13 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
-import Created from '@/components/Created.vue'
 
 const router = useRouter()
+const route = useRoute()
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
 
-interface Recipe {
-  name: string;
-  description: string;
-  image: string;
-  category: string;
-  ingredients: string[];
-  instructions: string;
-  author: string;
-  favorite: boolean;
-}
-
-const recipe = ref<Recipe>({
+const recipe = ref({
   name: '',
   description: '',
   image: '',
@@ -73,31 +62,44 @@ const validations = computed(() => ({
   author: isFieldValid(recipe.value.author)
 }))
 
-const showCreated = ref<boolean>(false)
+async function fetchRecipe(id: number) {
+  try {
+    const response = await axios.get(`${baseURL}/recipes/${id}`)
+    const data = response.data
+    recipe.value = {
+      ...data,
+      ingredients: data.ingredients.split(', ').filter((i: string) => i) // Split string to array
+    }
+  } catch (err) {
+    error.value = 'Failed to load recipe'
+    console.error('Error loading recipe:', err)
+  }
+}
 
-async function submitRecipe() {
+async function updateRecipe() {
   try {
     const recipeData = {
       ...recipe.value,
-      ingredients: recipe.value.ingredients.join(', ') // Join array to string for backend
+      ingredients: recipe.value.ingredients.join(', ') // Join back to string for backend
     }
-    const response = await axios.post(`${baseURL}/recipes`, recipeData)
-    console.log('Recipe created:', response.data)
-    showCreated.value = true
-    setTimeout(() => {
-      router.push('/recipes-composition-api')
-    }, 1500)
+    await axios.put(`${baseURL}/recipes/${route.params.id}`, recipeData)
+    router.push(`/recipes/${route.params.id}`)
   } catch (err) {
-    error.value = 'Failed to create recipe'
-    console.error('Error creating recipe:', err)
+    error.value = 'Failed to update recipe'
+    console.error('Error updating recipe:', err)
   }
 }
+
+onMounted(() => {
+  const id = parseInt(route.params.id as string, 10)
+  fetchRecipe(id)
+})
 </script>
 
 <template>
   <div class="create-recipe">
-    <h1>Create new Recipe</h1>
-    <form @submit.prevent="submitRecipe" class="recipe-form">
+    <h1>Edit Recipe</h1>
+    <form @submit.prevent="updateRecipe" class="recipe-form">
       <div class="form-group">
         <label for="name">Recipe Name:</label>
         <input id="name" v-model="recipe.name" type="text" required
@@ -147,7 +149,7 @@ async function submitRecipe() {
             <li v-for="(ingredient, index) in recipe.ingredients" :key="index" class="ingredient-item">
               <span class="ingredient-text">{{ ingredient }}</span>
               <button type="button" @click="removeIngredient(index)" class="remove-ingredient-btn">
-                ×
+                <span>×</span>
               </button>
             </li>
           </ul>
@@ -175,9 +177,8 @@ async function submitRecipe() {
 
       <div class="error" v-if="error">{{ error }}</div>
 
-      <button type="submit" class="submit-btn">Create</button>
+      <button type="submit" class="submit-btn">Update Recipe</button>
     </form>
-    <Created :show="showCreated" :message="'Your recipe has been created successfully.'" @close="() => showCreated.value = false" />
   </div>
 </template>
 
@@ -198,6 +199,7 @@ h1 {
 .recipe-form {
   display: flex;
   flex-direction: column;
+
   gap: 1.5rem;
 }
 
@@ -237,6 +239,30 @@ textarea:focus {
   box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
   background-color: white;
 }
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked {
+  background-color: antiquewhite !important;
+  color: #333 !important;
+  border: 2px solid antiquewhite;
+}
+select:hover,
+select:focus {
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+  background-color: white;
+  color: #333;
+}
+select option {
+  background-color: #f3f3f3;
+  color: #333;
+}
+textarea {
+  min-height: 300px;
+  resize: vertical;
+  width: 600px;
+}
 select {
   appearance: none;
   -webkit-appearance: none;
@@ -248,52 +274,6 @@ select {
     background-color 0.3s ease,
     border-color 0.3s ease;
 }
-
-select:hover,
-select:focus {
-  border: 2px solid antiquewhite;
-  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
-  background-color: white;
-  color: #333;
-}
-
-select option {
-  background-color: #f3f3f3;
-  color: #333;
-}
-
-select option:hover,
-select option:focus,
-select option:active,
-select option:checked {
-  background-color: antiquewhite !important;
-  color: #333 !important;
-  border: 2px solid antiquewhite;
-}
-
-textarea {
-  min-height: 300px;
-  resize: vertical;
-  width: 600px;
-}
-
-input.valid,
-select.valid,
-textarea.valid {
-  background-color: antiquewhite;
-}
-
-input.valid:hover,
-select.valid:hover,
-textarea.valid:hover,
-input.valid:focus,
-select.valid:focus,
-textarea.valid:focus {
-  background-color: antiquewhite;
-  border: 2px solid antiquewhite;
-  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
-}
-
 .submit-btn {
   background-color: #f3f3f3;
   color: #333;
@@ -339,7 +319,23 @@ textarea.valid:focus {
   background-color: antiquewhite;
 }
 
-/* Add these new styles for ingredients */
+input.valid,
+select.valid,
+textarea.valid {
+  background-color: antiquewhite;
+}
+
+input.valid:hover,
+select.valid:hover,
+textarea.valid:hover,
+input.valid:focus,
+select.valid:focus,
+textarea.valid:focus {
+  background-color: antiquewhite;
+  border: 2px solid antiquewhite;
+  box-shadow: 0px 0px 0px 7px rgba(237, 171, 230, 0.2);
+}
+
 .ingredients-container {
   background-color: antiquewhite;
   border-radius: 12px;
@@ -392,7 +388,6 @@ textarea.valid:focus {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  /* Remove any max-height or overflow properties */
 }
 
 .ingredient-item {

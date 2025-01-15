@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { shallowMount, flushPromises } from '@vue/test-utils'
 import axios from 'axios'
-import RecipeDetailView from '../RecipeDetailView.vue'
+import RecipeDetailView from '../../components/RecipeDetailView.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 vi.mock('axios')

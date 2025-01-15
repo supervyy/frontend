@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { flushPromises, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
-import RecipesCompositionApiList from '../../components/RecipesCompositionApiList.vue'
+import RecipesCompositionApiList from '../../views/RecipesCompositionApiView.vue'
 import type { Recipe } from '../../model/recipe'
 
 // Mock vue-router
