@@ -3,7 +3,6 @@ import { ref, watch, computed } from 'vue'
 import axios from 'axios'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
-import Created from '@/components/Created.vue'
 
 interface Recipe {
   id: number
@@ -25,8 +24,8 @@ const searchTerm = ref('')
 
 const filteredRecipes = computed(() => {
   if (!searchTerm.value.trim()) return recipes.value
-  return recipes.value.filter((recipe) =>
-    recipe.name.toLowerCase().includes(searchTerm.value.trim().toLowerCase()),
+  return recipes.value.filter(recipe =>
+    recipe.name.toLowerCase().includes(searchTerm.value.trim().toLowerCase())
   )
 })
 
@@ -65,18 +64,9 @@ function goToRecipeDetail(recipeId: number) {
   router.push(`/recipes/${recipeId}`)
 }
 
-const showCreated = ref(false)
-
-const handleClose = () => {
-  showCreated.value = false
-}
-
 onMounted(() => {
   if (route?.params.category) {
     categoryFilter.value = String(route?.params.category)
-  }
-  if (route.query.created === 'true') {
-    showCreated.value = true
   }
   requestRecipes()
 })
@@ -113,61 +103,49 @@ function toggleFavorite(recipeId: number): void {
 </script>
 
 <template>
-  <div class="container">
-    <h1 class="title">{{ displayTitle }}</h1>
-    <input
-      class="search-bar"
-      type="text"
-      v-model="searchTerm"
-      @input="onSearch"
-      placeholder="Search..."
-    />
-    <div class="recipe-list">
-      <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
-      <div class="recipes-container">
-        <div
-          v-for="recipe in filteredRecipes"
-          :key="recipe.id"
-          class="recipe-card"
-          @click="goToRecipeDetail(recipe.id)"
-        >
-          <!-- Rezeptbild -->
-          <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
-          <!-- Rezeptname -->
-          <h2 class="recipe-name">{{ recipe.name }}</h2>
-          <!-- Herz-Symbol -->
-          <button class="btn" @click.stop="toggleFavorite(recipe.id)">
-            <svg
-              :class="['icon', { 'icon-filled': recipe.favorite }]"
-              xmlns="http://www.w3.org/2000/svg"
-              width="20.503"
-              height="20.625"
-              viewBox="0 0 17.503 15.625"
-            >
-              <path
-                id="Fill"
-                d="M8.752,15.625h0L1.383,8.162a4.824,4.824,0,0,1,0-6.762,4.679,4.679,0,0,1,6.674,0l.694.7.694-.7a4.678,4.678,0,0,1,6.675,0,4.825,4.825,0,0,1,0,6.762L8.752,15.624ZM4.72,1.25A3.442,3.442,0,0,0,2.277,2.275a3.562,3.562,0,0,0,0,5l6.475,6.556,6.475-6.556a3.563,3.563,0,0,0,0-5A3.443,3.443,0,0,0,12.786,1.25h-.01a3.415,3.415,0,0,0-2.443,1.038L8.752,3.9,7.164,2.275A3.442,3.442,0,0,0,4.72,1.25Z"
-                transform="translate(0 0)"
-              ></path>
-            </svg>
-          </button>
-        </div>
+  <h1 class="title">{{ displayTitle }}</h1>
+  <input
+    class="search-bar"
+    type="text"
+    v-model="searchTerm"
+    @input="onSearch"
+    placeholder="Search..."
+  />
+  <div class="recipe-list">
+    <div v-if="recipes.length === 0" class="warning">No recipes found!</div>
+    <div class="recipes-container">
+      <div
+        v-for="recipe in filteredRecipes"
+        :key="recipe.id"
+        class="recipe-card"
+        @click="goToRecipeDetail(recipe.id)"
+      >
+        <!-- Rezeptbild -->
+        <img :src="recipe.image" alt="Recipe image" class="recipe-image" />
+        <!-- Rezeptname -->
+        <h2 class="recipe-name">{{ recipe.name }}</h2>
+        <!-- Herz-Symbol -->
+        <button class="btn" @click.stop="toggleFavorite(recipe.id)">
+          <svg
+            :class="['icon', { 'icon-filled': recipe.favorite }]"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20.503"
+            height="20.625"
+            viewBox="0 0 17.503 15.625"
+          >
+            <path
+              id="Fill"
+              d="M8.752,15.625h0L1.383,8.162a4.824,4.824,0,0,1,0-6.762,4.679,4.679,0,0,1,6.674,0l.694.7.694-.7a4.678,4.678,0,0,1,6.675,0,4.825,4.825,0,0,1,0,6.762L8.752,15.624ZM4.72,1.25A3.442,3.442,0,0,0,2.277,2.275a3.562,3.562,0,0,0,0,5l6.475,6.556,6.475-6.556a3.563,3.563,0,0,0,0-5A3.443,3.443,0,0,0,12.786,1.25h-.01a3.415,3.415,0,0,0-2.443,1.038L8.752,3.9,7.164,2.275A3.442,3.442,0,0,0,4.72,1.25Z"
+              transform="translate(0 0)"
+            ></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
-
-  <!-- Add the <Created> component outside the container -->
-  <Created :show="showCreated" @close="handleClose" />
 </template>
 
 <style scoped>
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  z-index: 1; /* Ensure the container doesn't block the Created component */
-}
-
 .recipe-list {
   display: flex;
   flex-direction: column;

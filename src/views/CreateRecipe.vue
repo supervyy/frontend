@@ -12,13 +12,13 @@ const recipe = ref({
   image: '',
   category: '',
   ingredients: [] as string[],
-  instructions: [] as string[],
+  instructions: [] as string[], // Changed from '' to an empty array
   author: '',
   favorite: false,
 })
 
 const newIngredient = ref('')
-const newInstruction = ref('')
+const newInstruction = ref('') // Add this line
 
 const addIngredient = () => {
   if (newIngredient.value.trim()) {
@@ -28,6 +28,7 @@ const addIngredient = () => {
 }
 
 const addInstruction = () => {
+  // Add this function
   if (newInstruction.value.trim()) {
     recipe.value.instructions.push(newInstruction.value.trim())
     newInstruction.value = ''
@@ -39,6 +40,7 @@ const removeIngredient = (index: number) => {
 }
 
 const removeInstruction = (index: number) => {
+  // Add this function
   recipe.value.instructions.splice(index, 1)
 }
 
@@ -50,6 +52,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 }
 
 const handleInstructionKeyPress = (event: KeyboardEvent) => {
+  // Add this function
   if (event.key === 'Enter') {
     event.preventDefault()
     addInstruction()
@@ -85,12 +88,11 @@ async function submitRecipe() {
     const recipeData = {
       ...recipe.value,
       ingredients: recipe.value.ingredients.join(', '),
-      instructions: recipe.value.instructions.join('. '),
+      instructions: recipe.value.instructions.join('. '), // Join instructions into a single string
     }
     const response = await axios.post(`${baseURL}/recipes`, recipeData)
     console.log('Recipe created:', response.data)
-    router.push({ path: '/recipes-composition-api-list', query: { created: 'true' } }) // Navigate with success query
-    error.value = null
+    router.push('/recipes-composition-api')
   } catch (err) {
     error.value = 'Failed to create recipe'
     console.error('Error creating recipe:', err)
@@ -133,7 +135,7 @@ const saveEditedIngredient = (index: number) => {
   if (trimmedText) {
     recipe.value.ingredients[index] = trimmedText
   } else {
-    recipe.value.ingredients.splice(index, 1)
+    recipe.value.ingredients.splice(index, 1) // Remove ingredient if empty
   }
   editingIngredient.value = null
   editedIngredientText.value = ''
