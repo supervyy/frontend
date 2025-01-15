@@ -2,19 +2,20 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import Created from '@/components/Created.vue'
 
 const router = useRouter()
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
 
 interface Recipe {
-  name: string
-  description: string
-  image: string
-  category: string
-  ingredients: string[]
-  instructions: string
-  author: string
-  favorite: boolean
+  name: string;
+  description: string;
+  image: string;
+  category: string;
+  ingredients: string[];
+  instructions: string;
+  author: string;
+  favorite: boolean;
 }
 
 const recipe = ref<Recipe>({
@@ -69,7 +70,7 @@ const validations = computed(() => ({
   category: isFieldValid(recipe.value.category),
   ingredients: recipe.value.ingredients.length > 0,
   instructions: isFieldValid(recipe.value.instructions),
-  author: isFieldValid(recipe.value.author),
+  author: isFieldValid(recipe.value.author)
 }))
 
 const showCreated = ref<boolean>(false)
@@ -78,7 +79,7 @@ async function submitRecipe() {
   try {
     const recipeData = {
       ...recipe.value,
-      ingredients: recipe.value.ingredients.join(', '), // Join array to string for backend
+      ingredients: recipe.value.ingredients.join(', ') // Join array to string for backend
     }
     const response = await axios.post(`${baseURL}/recipes`, recipeData)
     console.log('Recipe created:', response.data)
@@ -99,44 +100,26 @@ async function submitRecipe() {
     <form @submit.prevent="submitRecipe" class="recipe-form">
       <div class="form-group">
         <label for="name">Recipe Name:</label>
-        <input
-          id="name"
-          v-model="recipe.name"
-          type="text"
-          required
-          :class="{ valid: validations.name }"
-        />
+        <input id="name" v-model="recipe.name" type="text" required
+               :class="{ 'valid': validations.name }" />
       </div>
 
       <div class="form-group">
         <label for="description">Description:</label>
-        <textarea
-          id="description"
-          v-model="recipe.description"
-          required
-          :class="{ valid: validations.description }"
-        ></textarea>
+        <textarea id="description" v-model="recipe.description" required
+                  :class="{ 'valid': validations.description }"></textarea>
       </div>
 
       <div class="form-group">
         <label for="image">Image URL:</label>
-        <input
-          id="image"
-          v-model="recipe.image"
-          type="url"
-          required
-          :class="{ valid: validations.image }"
-        />
+        <input id="image" v-model="recipe.image" type="url" required
+               :class="{ 'valid': validations.image }" />
       </div>
 
       <div class="form-group">
         <label for="category">Category:</label>
-        <select
-          id="category"
-          v-model="recipe.category"
-          required
-          :class="{ valid: validations.category }"
-        >
+        <select id="category" v-model="recipe.category" required
+                :class="{ 'valid': validations.category }">
           <option value="" disabled>Select a category</option>
           <option v-for="category in categories" :key="category" :value="category">
             {{ category }}
@@ -154,18 +137,14 @@ async function submitRecipe() {
               type="text"
               placeholder="Type an ingredient and press Enter or Add"
               @keypress="handleKeyPress"
-              :class="{ valid: validations.ingredients }"
+              :class="{ 'valid': validations.ingredients }"
             />
             <button type="button" @click="addIngredient" class="add-ingredient-btn">
               <span>+</span>
             </button>
           </div>
           <ul class="ingredients-list">
-            <li
-              v-for="(ingredient, index) in recipe.ingredients"
-              :key="index"
-              class="ingredient-item"
-            >
+            <li v-for="(ingredient, index) in recipe.ingredients" :key="index" class="ingredient-item">
               <span class="ingredient-text">{{ ingredient }}</span>
               <button type="button" @click="removeIngredient(index)" class="remove-ingredient-btn">
                 ×
@@ -177,23 +156,14 @@ async function submitRecipe() {
 
       <div class="form-group">
         <label for="instructions">Instructions (numbered steps):</label>
-        <textarea
-          id="instructions"
-          v-model="recipe.instructions"
-          required
-          :class="{ valid: validations.instructions }"
-        ></textarea>
+        <textarea id="instructions" v-model="recipe.instructions" required
+                  :class="{ 'valid': validations.instructions }"></textarea>
       </div>
 
       <div class="form-group">
         <label for="author">Author:</label>
-        <input
-          id="author"
-          v-model="recipe.author"
-          type="text"
-          required
-          :class="{ valid: validations.author }"
-        />
+        <input id="author" v-model="recipe.author" type="text" required
+               :class="{ 'valid': validations.author }" />
       </div>
 
       <div class="form-group checkbox-group">
@@ -207,11 +177,7 @@ async function submitRecipe() {
 
       <button type="submit" class="submit-btn">Create</button>
     </form>
-    <Created
-      :show="showCreated"
-      :message="'Your recipe has been created successfully.'"
-      @close="() => (showCreated.value = false)"
-    />
+    <Created :show="showCreated" :message="'Your recipe has been created successfully.'" @close="() => showCreated.value = false" />
   </div>
 </template>
 
