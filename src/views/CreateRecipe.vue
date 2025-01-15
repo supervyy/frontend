@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import Created from '@/components/Created.vue'
 
 const router = useRouter()
 const baseURL = import.meta.env.VITE_APP_BACKEND_BASE_URL
@@ -73,20 +72,18 @@ const validations = computed(() => ({
   author: isFieldValid(recipe.value.author)
 }))
 
-const showCreated = ref<boolean>(false)
+
 
 async function submitRecipe() {
   try {
     const recipeData = {
       ...recipe.value,
-      ingredients: recipe.value.ingredients.join(', ') // Join array to string for backend
+      ingredients: recipe.value.ingredients.join(', ')
     }
     const response = await axios.post(`${baseURL}/recipes`, recipeData)
     console.log('Recipe created:', response.data)
-    showCreated.value = true
     setTimeout(() => {
-      router.push('/recipes-composition-api')
-    }, 1500)
+      router.push('/recipes-composition-api')},)
   } catch (err) {
     error.value = 'Failed to create recipe'
     console.error('Error creating recipe:', err)
@@ -177,7 +174,7 @@ async function submitRecipe() {
 
       <button type="submit" class="submit-btn">Create</button>
     </form>
-    <Created :show="showCreated" :message="'Your recipe has been created successfully.'" @close="() => showCreated.value = false" />
+
   </div>
 </template>
 
@@ -339,7 +336,7 @@ textarea.valid:focus {
   background-color: antiquewhite;
 }
 
-/* Add these new styles for ingredients */
+
 .ingredients-container {
   background-color: antiquewhite;
   border-radius: 12px;
@@ -392,7 +389,7 @@ textarea.valid:focus {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  /* Remove any max-height or overflow properties */
+
 }
 
 .ingredient-item {
